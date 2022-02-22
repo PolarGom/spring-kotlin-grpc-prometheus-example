@@ -65,6 +65,26 @@ docker run -d --name mariadb \
 mariadb
 ```
 
+### 예제 DDL 
+
+```
+CREATE TABLE `USER` (
+  `id` int(4) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `USER_PHONE` (
+  `user_id` int(4) NOT NULL,
+  `id` int(4) NOT NULL,
+  `phone_number` varchar(50) NOT NULL,
+  PRIMARY KEY (`user_id`,`id`)
+) DEFAULT CHARSET=utf8mb3;
+```
+
 ### 모니터링을 위한 스프링 부트 설정
 1. 스프링 부트 프로젝트에서 build.gralde.kts 에 라이브러리를 추가한다.
 
