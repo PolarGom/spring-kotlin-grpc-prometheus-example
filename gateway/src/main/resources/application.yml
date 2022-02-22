@@ -1,0 +1,82 @@
+spring:
+  application:
+    name: Gateway
+  profiles:
+    active: local
+  servlet:
+    encoding:
+      charset: UTF-8
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 3000
+        response-timeout: 30s
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway Golbal Filter
+            preLogger: true
+            postLogger: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+#server:
+#  servlet:
+#    context-path: /gw
+---
+spring:
+  config:
+    active:
+      on-profile: prod
+  servlet:
+    multipart:
+      location: /usr/data/temp/
+server:
+  port: 8080
+logging:
+  config: classpath:logback/logback-spring-prod.xml
+---
+spring:
+  config:
+    active:
+      on-profile: dev
+  servlet:
+    multipart:
+      location: D:/data/temp/
+server:
+  port: 9090
+logging:
+  config: classpath:logback/logback-spring-dev.xml
+---
+spring:
+  config:
+    active:
+      on-profile: local
+  servlet:
+    multipart:
+      location: D:/data/temp/
+  cloud:
+    gateway:
+      routes:
+        - id: client-api
+          uri: http://localhost:9091/
+          predicates:
+            - Path=/client-api/**
+          filters:
+            - name: ClientApiFilter
+              args:
+                baseMessage: Spring Cloud Gateway Client API Filter
+                preLogger: true
+                postLogger: true
+server:
+  port: 9090
+logging:
+  config: classpath:logback/logback-spring-local.xml

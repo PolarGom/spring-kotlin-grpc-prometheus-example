@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: Admin-API
+  profiles:
+    active: local
+  servlet:
+    encoding:
+      charset: UTF-8
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+server:
+  servlet:
+    context-path: /admin-api
+---
+spring:
+  config:
+    active:
+      on-profile: prod
+  servlet:
+    multipart:
+      location: /usr/data/temp/
+server:
+  port: 8081
+logging:
+  config: classpath:logback/logback-spring-prod.xml
+---
+spring:
+  config:
+    active:
+      on-profile: dev
+  servlet:
+    multipart:
+      location: D:/data/temp/
+server:
+  port: 9091
+logging:
+  config: classpath:logback/logback-spring-dev.xml
+---
+spring:
+  config:
+    active:
+      on-profile: local
+  servlet:
+    multipart:
+      location: D:/data/temp/
+server:
+  port: 9091
+logging:
+  config: classpath:logback/logback-spring-local.xml

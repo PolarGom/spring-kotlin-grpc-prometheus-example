@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: Log-API
+  profiles:
+    active: local
+  servlet:
+    encoding:
+      charset: UTF-8
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+server:
+  servlet:
+    context-path: /log-api
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+---
+spring:
+  config:
+    active:
+      on-profile: prod
+  servlet:
+    multipart:
+      location: /usr/data/temp/
+server:
+  port: 8082
+logging:
+  config: classpath:logback/logback-spring-prod.xml
+---
+spring:
+  config:
+    active:
+      on-profile: dev
+  servlet:
+    multipart:
+      location: D:/data/temp/
+server:
+  port: 9092
+logging:
+  config: classpath:logback/logback-spring-dev.xml
+---
+spring:
+  config:
+    active:
+      on-profile: local
+  servlet:
+    multipart:
+      location: D:/data/temp/
+  datasource:
+    hikari:
+      master:
+        driver-class-name: org.mariadb.jdbc.Driver
+        jdbc-url: jdbc:mariadb://localhost:3300/lina?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+        username: root
+        password: secret
+        minimum-idle: 10
+        maximum-pool-size: 50
+        auto-commit: false
+server:
+  port: 9092
+logging:
+  config: classpath:logback/logback-spring-local.xml
+grpc:
+  server:
+    port: 9093

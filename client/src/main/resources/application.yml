@@ -1,0 +1,73 @@
+spring:
+  application:
+    name: Client-API
+  profiles:
+    active: local
+  servlet:
+    encoding:
+      charset: UTF-8
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+server:
+  servlet:
+    context-path: /client-api
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+---
+spring:
+  config:
+    active:
+      on-profile: prod
+  servlet:
+    multipart:
+      location: /usr/data/temp/
+server:
+  port: 8081
+logging:
+  config: classpath:logback/logback-spring-prod.xml
+---
+spring:
+  config:
+    active:
+      on-profile: dev
+  servlet:
+    multipart:
+      location: D:/data/temp/
+server:
+  port: 9091
+logging:
+  config: classpath:logback/logback-spring-dev.xml
+---
+spring:
+  config:
+    active:
+      on-profile: local
+  servlet:
+    multipart:
+      location: D:/data/temp/
+  datasource:
+    hikari:
+      master:
+        driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        jdbc-url: jdbc:log4jdbc:mysql://localhost:3300/lina?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true
+        username: root
+        password: secret
+        minimum-idle: 10
+        maximum-pool-size: 50
+        auto-commit: false
+server:
+  port: 9091
+logging:
+  config: classpath:logback/logback-spring-local.xml
+grpc:
+  client:
+    log:
+      address: 'static://127.0.0.1:9093'
+      negotiationtype: plaintext
